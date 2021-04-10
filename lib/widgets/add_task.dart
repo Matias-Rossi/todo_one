@@ -4,6 +4,9 @@ import '../models/task.dart';
 
 class AddTask extends StatefulWidget {
   @override
+  final Function addTask;
+  AddTask(this.addTask);
+
   _AddTaskState createState() => _AddTaskState();
 }
 
@@ -13,11 +16,19 @@ class _AddTaskState extends State<AddTask> {
   final _detailsController = TextEditingController();
   final _tagsController = TextEditingController();
   final _subtasksController = TextEditingController();
+  //final _priority; //Todo: implement priority picker
   DateTime _dateDue;
-  DateTime _dateCreated;
 
   void _submitData() {
     if (_nameController.text.isEmpty) return;
+    widget.addTask(
+      _nameController,
+      _dateDue,
+      _detailsController,
+      _tagsController,
+      _subtasksController,
+      //_priority,
+    );
   }
 
   void _presentDatePicker() {

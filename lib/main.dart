@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import './widgets/add_task.dart';
+import './widgets/task_list.dart';
 import './models/task.dart';
 
 void main() {
@@ -25,21 +28,32 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
-  final appBar = AppBar(title: Text("To-Do List"), actions: <Widget>[
-    IconButton(
-      icon: Icon(Icons.add),
-      onPressed: () => addTask,
+  final List<Task> _userTasks = [
+    Task(
+      id: DateTime.now().toString(),
+      name: "Hacer tarea AM2",
+      dateCreated: DateTime.now() != null ? DateTime.now() : DateTime.utc(2001),
+      priority: 3,
     ),
-  ]);
+  ];
 
   void _addNewTask(
-    String name, {
-    dateDue: DateTime,
-    details: String,
-    tags: String,
-    subtasks: String,
-    priority: int,
-  }) {
+    String name,
+    DateTime dateDue,
+    String details,
+    String tagsString,
+    String subtasksString,
+    int priority,
+  ) {
+    final List<String> tags = tagsString.split(", ");
+    final List<String> subtasksList = subtasksString.split(", ");
+
+    List<Subtask> _subtasks;
+    subtasksList.forEach((subtaskName) {
+      Subtask newSubtask = Subtask(subtaskName, false);
+      _subtasks.add(newSubtask);
+    });
+
     final newTask = Task(
       id: DateTime.now().toString(),
       name: name,
@@ -47,16 +61,17 @@ class _MyHomePageState extends State<MyHomePage> {
       details: details,
       tags: tags,
       dateDue: dateDue,
-      subtasks: subtasks,
+      subtasks: _subtasks,
       priority: priority,
+      status: "Pendiente",
     );
 
-    setState((){
-      _userTaks.add(newTask);
-    })
+    setState(() {
+      _userTasks.add(newTask);
+    });
   }
 
-  void _startNewTask(BuildContext ctx) {
+  void _startAddNewTask(BuildContext ctx) {
     showModalBottomSheet(
         context: ctx,
         builder: (_) {
@@ -69,6 +84,25 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold();
+    final appBar = AppBar(title: Text("To-Do List"), actions: <Widget>[
+      IconButton(
+        icon: Icon(Icons.add),
+        onPressed: () => _startAddNewTask(context),
+      ),
+    ]);
+
+    final taskListWidget = Expanded(child: TaskList(_userTasks));
+
+    return Scaffold(
+      appBar: appBar,
+      body: Column(
+        children: <Widget>[taskListWidget],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => _startAddNewTask(context),
+      ),
+    );
   }
 }

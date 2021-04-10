@@ -26,5 +26,6 @@ class Task {
       this.tags,
       this.dateDue,
       this.subtasks,
-      this.priority});
+      this.priority,
+      this.status});
 }
