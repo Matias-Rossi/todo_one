@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 class Subtask {
   bool isCompleted;
   String name;
+
+  Subtask(this.name, this.isCompleted);
 }
 
 class Task {
@@ -14,6 +16,7 @@ class Task {
   DateTime dateDue;
   List<Subtask> subtasks;
   int priority;
+  String status;
 
   Task(
       {@required this.id,
