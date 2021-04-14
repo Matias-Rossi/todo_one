@@ -39,7 +39,7 @@ class _TaskListState extends State<TaskList> {
   Widget _showDetails(String details) {
     if (details != null) {
       return details.isNotEmpty
-          ? Text(details, style: TextStyle(color: Colors.black12))
+          ? Text(details, style: TextStyle(color: Colors.black45))
           : TaskList._empty;
     } else
       return TaskList._empty;
