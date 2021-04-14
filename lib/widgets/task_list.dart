@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/task.dart';
 
-class TaskList extends StatelessWidget {
+class TaskList extends StatefulWidget {
   final List<Task> tasks;
 
   TaskList(this.tasks);
 
+  static Widget _empty = Container(width: 0, height: 0);
+
+  @override
+  _TaskListState createState() => _TaskListState();
+}
+
+class _TaskListState extends State<TaskList> {
   List<Widget> _showSubtasks(List<Subtask> subtasks) {
-    if (subtasks == null || subtasks[0].name == "") return [_empty];
+    if (subtasks == null || subtasks[0].name == "") return [TaskList._empty];
     print(subtasks[0].name);
     List<Widget> ret = [];
     subtasks.forEach((subtask) {
@@ -26,20 +33,20 @@ class TaskList extends StatelessWidget {
   Widget _showDate(DateTime dateDue) {
     return dateDue != null
         ? Text("\u{1F4C5} ${DateFormat.yMd().format(dateDue)}")
-        : _empty;
+        : TaskList._empty;
   }
 
   Widget _showDetails(String details) {
     if (details != null) {
       return details.isNotEmpty
           ? Text(details, style: TextStyle(color: Colors.black12))
-          : _empty;
+          : TaskList._empty;
     } else
-      return _empty;
+      return TaskList._empty;
   }
 
   Widget _showStatus(String status) {
-    if (status == null) return _empty;
+    if (status == null) return TaskList._empty;
     Color backColor;
     switch (status) {
       case "Pendiente":
@@ -68,12 +75,10 @@ class TaskList extends StatelessWidget {
     );
   }
 
-  static Widget _empty = Container(width: 0, height: 0);
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: tasks.isEmpty
+      child: widget.tasks.isEmpty
           ? LayoutBuilder(builder: (ctx, constraints) {
               return Column(children: <Widget>[
                 Text('Sin tareas!',
@@ -91,68 +96,94 @@ class TaskList extends StatelessWidget {
               ]);
             })
           : ListView.builder(
-              itemCount: tasks.length,
+              itemCount: widget.tasks.length,
               itemBuilder: (ctx, ind) {
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                  elevation: 5,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    tasks[ind].name,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      /*color: Theme.of(context).primaryColorDark*/
+                return Dismissible(
+                  key: Key(widget.tasks[ind].id),
+                  child: Card(
+                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.tasks[ind].name,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        /*color: Theme.of(context).primaryColorDark*/
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 16.0),
-                                    child: _showStatus(tasks[ind].status),
-                                  ),
-                                  //todo armar mejor la presentación de los estados
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  _showDate(tasks[ind].dateDue),
-                                  tasks[ind].priority == 1
-                                      ? Text("Urgente")
-                                      : _empty,
-                                  tasks[ind].priority == 2
-                                      ? Text("Normal")
-                                      : _empty,
-                                  tasks[ind].priority == 3
-                                      ? Text("No urgente")
-                                      : _empty,
-                                  //todo estilizar con colores
-                                ],
-                                mainAxisAlignment: MainAxisAlignment.start,
-                              ),
-                              _showDetails(tasks[ind].details),
-                              ..._showSubtasks(tasks[ind]
-                                  .subtasks) //TODO encontrar una forma de hacer bien el _empty
-                            ],
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 16.0),
+                                      child:
+                                          _showStatus(widget.tasks[ind].status),
+                                    ),
+                                    //todo armar mejor la presentación de los estados
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    _showDate(widget.tasks[ind].dateDue),
+                                    widget.tasks[ind].priority == 1
+                                        ? Text("Urgente")
+                                        : TaskList._empty,
+                                    widget.tasks[ind].priority == 2
+                                        ? Text("Normal")
+                                        : TaskList._empty,
+                                    widget.tasks[ind].priority == 3
+                                        ? Text("No urgente")
+                                        : TaskList._empty,
+                                    //todo estilizar con colores
+                                  ],
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                ),
+                                _showDetails(widget.tasks[ind].details),
+                                ..._showSubtasks(widget.tasks[ind]
+                                    .subtasks) //TODO encontrar una forma de hacer bien el _empty
+                              ],
+                            ),
                           ),
-                        ),
-                        IconButton(
-                            icon: const Icon(Icons.list_sharp),
-                            onPressed: () => {})
-                      ],
+                          IconButton(
+                              icon: const Icon(Icons.list_sharp),
+                              onPressed: () => {})
+                        ],
+                      ),
                     ),
                   ),
+                  background: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(Icons.delete_forever, size: 24.0),
+                          //Icon(Icons.delete_forever, size: 24.0),
+                          Text(""),
+                        ],
+                      ),
+                    ),
+                  ),
+                  onDismissed: (direction) {
+                    setState(() {
+                      widget.tasks.removeAt(ind);
+                    });
+                    /*
+                    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                        content: Text("${widget.tasks[ind].name} eliminado")));*/
+                  },
                 );
               }),
     );
