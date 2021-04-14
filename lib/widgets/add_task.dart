@@ -28,6 +28,10 @@ class _AddTaskState extends State<AddTask> {
       _subtasksController.text,
       _priority,
     );
+    _nameController.dispose();
+    _detailsController.dispose();
+    _tagsController.dispose();
+    _subtasksController.dispose();
   }
 
   void _presentDatePicker() {
