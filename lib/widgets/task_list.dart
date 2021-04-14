@@ -75,6 +75,24 @@ class _TaskListState extends State<TaskList> {
     );
   }
 
+  Widget _showPriority(int priority) {
+    switch (priority) {
+      case 1:
+        return Text("Urgente");
+        break;
+      case 2:
+        return Text("Prioritario");
+        break;
+      case 3:
+        return Text("Sin urgencia");
+        break;
+      default:
+        return TaskList._empty;
+    }
+
+    //todo estilizar con colores
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -134,23 +152,21 @@ class _TaskListState extends State<TaskList> {
                                     //todo armar mejor la presentación de los estados
                                   ],
                                 ),
-                                Row(
-                                  children: [
-                                    _showDate(widget.tasks[ind].dateDue),
-                                    widget.tasks[ind].priority == 1
-                                        ? Text("Urgente")
-                                        : TaskList._empty,
-                                    widget.tasks[ind].priority == 2
-                                        ? Text("Normal")
-                                        : TaskList._empty,
-                                    widget.tasks[ind].priority == 3
-                                        ? Text("No urgente")
-                                        : TaskList._empty,
-                                    //todo estilizar con colores
-                                  ],
-                                  mainAxisAlignment: MainAxisAlignment.start,
+
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 2.0),
+                                  child: _showDate(widget.tasks[ind].dateDue),
                                 ),
-                                _showDetails(widget.tasks[ind].details),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 2.0),
+                                  child:
+                                      _showPriority(widget.tasks[ind].priority),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 2.0),
+                                  child:
+                                      _showDetails(widget.tasks[ind].details),
+                                ),
                                 ..._showSubtasks(widget.tasks[ind]
                                     .subtasks) //TODO encontrar una forma de hacer bien el _empty
                               ],
