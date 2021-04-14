@@ -48,15 +48,16 @@ class _AddTaskState extends State<AddTask> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Card(
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      Card(
         child: Container(
           padding: EdgeInsets.only(
-              top: 10,
-              left: 10,
-              right: 10,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 10),
+            top: 10,
+            left: 10,
+            right: 10,
+          ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               TextField(
@@ -98,6 +99,6 @@ class _AddTaskState extends State<AddTask> {
           ),
         ),
       ),
-    );
+    ]);
   }
 }
