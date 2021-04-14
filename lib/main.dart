@@ -28,7 +28,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  @override
   final List<Task> _userTasks = [
     Task(
       id: DateTime.now().toString(),
@@ -86,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  @override
   Widget build(BuildContext context) {
     final appBar = AppBar(title: Text("To-Do List"), actions: <Widget>[
       IconButton(

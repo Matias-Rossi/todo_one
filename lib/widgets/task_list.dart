@@ -38,6 +38,36 @@ class TaskList extends StatelessWidget {
       return _empty;
   }
 
+  Widget _showStatus(String status) {
+    if (status == null) return _empty;
+    Color backColor;
+    switch (status) {
+      case "Pendiente":
+        backColor = Color.fromRGBO(230, 179, 62, 127);
+        break;
+      case "Hoy":
+        backColor = Color.fromRGBO(163, 11, 0, 127);
+        break;
+      case "Realizado":
+        backColor = Color.fromRGBO(72, 181, 0, 127);
+        break;
+      default:
+        return Text(status);
+    }
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: backColor,
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+        child: Text(status),
+      ),
+    );
+  }
+
   static Widget _empty = Container(width: 0, height: 0);
 
   @override
@@ -67,7 +97,8 @@ class TaskList extends StatelessWidget {
                   margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                   elevation: 5,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,9 +120,7 @@ class TaskList extends StatelessWidget {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 16.0),
-                                    child: Text(tasks[ind].status != null
-                                        ? tasks[ind].status
-                                        : ""),
+                                    child: _showStatus(tasks[ind].status),
                                   ),
                                   //todo armar mejor la presentación de los estados
                                 ],
