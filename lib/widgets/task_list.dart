@@ -8,7 +8,9 @@ class TaskList extends StatelessWidget {
   TaskList(this.tasks);
 
   List<Widget> _showSubtasks(List<Subtask> subtasks) {
-    List<Widget> ret;
+    if (subtasks == null || subtasks[0].name == "") return [_empty];
+    print(subtasks[0].name);
+    List<Widget> ret = [];
     subtasks.forEach((subtask) {
       final subtaskLine = CheckboxListTile(
         value: subtask.isCompleted,
@@ -20,6 +22,23 @@ class TaskList extends StatelessWidget {
     });
     return ret;
   }
+
+  Widget _showDate(DateTime dateDue) {
+    return dateDue != null
+        ? Text("\u{1F4C5} ${DateFormat.yMd().format(dateDue)}")
+        : _empty;
+  }
+
+  Widget _showDetails(String details) {
+    if (details != null) {
+      return details.isNotEmpty
+          ? Text(details, style: TextStyle(color: Colors.black12))
+          : _empty;
+    } else
+      return _empty;
+  }
+
+  static Widget _empty = Container(width: 0, height: 0);
 
   @override
   Widget build(BuildContext context) {
@@ -41,39 +60,72 @@ class TaskList extends StatelessWidget {
                 )
               ]);
             })
-          : ListView.builder(itemBuilder: (ctx, ind) {
-              return Card(
-                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                elevation: 5,
-                child: Column(
-                  children: [
-                    Text(
-                      tasks[ind].name,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Theme.of(context).primaryColor),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                            '\u{1F4C5} ${DateFormat.yMd().format(tasks[ind].dateDue)}'),
-                        tasks[ind].priority == 1 ? Text("Urgente") : null,
-                        tasks[ind].priority == 2 ? Text("Normal") : null,
-                        tasks[ind].priority == 3 ? Text("No urgente") : null,
-                        //todo estilizar con colores
-                      ],
+          : ListView.builder(
+              itemCount: tasks.length,
+              itemBuilder: (ctx, ind) {
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                  elevation: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    tasks[ind].name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      /*color: Theme.of(context).primaryColorDark*/
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 16.0),
+                                    child: Text(tasks[ind].status != null
+                                        ? tasks[ind].status
+                                        : ""),
+                                  ),
+                                  //todo armar mejor la presentación de los estados
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  _showDate(tasks[ind].dateDue),
+                                  tasks[ind].priority == 1
+                                      ? Text("Urgente")
+                                      : _empty,
+                                  tasks[ind].priority == 2
+                                      ? Text("Normal")
+                                      : _empty,
+                                  tasks[ind].priority == 3
+                                      ? Text("No urgente")
+                                      : _empty,
+                                  //todo estilizar con colores
+                                ],
+                                mainAxisAlignment: MainAxisAlignment.start,
+                              ),
+                              _showDetails(tasks[ind].details),
+                              ..._showSubtasks(tasks[ind]
+                                  .subtasks) //TODO encontrar una forma de hacer bien el _empty
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                            icon: const Icon(Icons.list_sharp),
+                            onPressed: () => {})
+                      ],
                     ),
-                    tasks[ind].details != null
-                        ? Text(tasks[ind].details,
-                            style: TextStyle(color: Colors.black12))
-                        : null,
-                    ..._showSubtasks(tasks[ind].subtasks)
-                  ],
-                ),
-              );
-            }),
+                  ),
+                );
+              }),
     );
   }
 }

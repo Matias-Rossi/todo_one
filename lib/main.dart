@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import './widgets/add_task.dart';
 import './widgets/task_list.dart';
 import './models/task.dart';
+import './widgets/search_sort_bar.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
       name: "Hacer tarea AM2",
       dateCreated: DateTime.now() != null ? DateTime.now() : DateTime.utc(2001),
       priority: 3,
+      status: "Pendiente",
     ),
   ];
 
@@ -48,11 +50,12 @@ class _MyHomePageState extends State<MyHomePage> {
     final List<String> tags = tagsString.split(", ");
     final List<String> subtasksList = subtasksString.split(", ");
 
-    List<Subtask> _subtasks;
-    subtasksList.forEach((subtaskName) {
-      Subtask newSubtask = Subtask(subtaskName, false);
-      _subtasks.add(newSubtask);
-    });
+    List<Subtask> _subtasks = [];
+    if (subtasksList.isNotEmpty && subtasksList != null)
+      subtasksList.forEach((subtaskName) {
+        Subtask newSubtask = Subtask(subtaskName, false);
+        _subtasks.add(newSubtask);
+      });
 
     final newTask = Task(
       id: DateTime.now().toString(),
@@ -91,12 +94,16 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     ]);
 
+    final _searchSortBar = SearchSortBar();
     final taskListWidget = Expanded(child: TaskList(_userTasks));
 
     return Scaffold(
       appBar: appBar,
       body: Column(
-        children: <Widget>[taskListWidget],
+        children: <Widget>[
+          _searchSortBar,
+          taskListWidget,
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(

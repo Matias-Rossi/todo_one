@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import '../models/task.dart';
 
 class AddTask extends StatefulWidget {
-  @override
+  //@override
   final Function addTask;
   AddTask(this.addTask);
 
@@ -11,23 +11,22 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
-  @override
   final _nameController = TextEditingController();
   final _detailsController = TextEditingController();
   final _tagsController = TextEditingController();
   final _subtasksController = TextEditingController();
-  //final _priority; //Todo: implement priority picker
+  final _priority = 1; //Todo: implement priority picker
   DateTime _dateDue;
 
   void _submitData() {
     if (_nameController.text.isEmpty) return;
     widget.addTask(
-      _nameController,
+      _nameController.text,
       _dateDue,
-      _detailsController,
-      _tagsController,
-      _subtasksController,
-      //_priority,
+      _detailsController.text,
+      _tagsController.text,
+      _subtasksController.text,
+      _priority,
     );
   }
 
@@ -35,8 +34,8 @@ class _AddTaskState extends State<AddTask> {
     showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2021),
-      lastDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
     ).then((pickedDate) {
       if (pickedDate == null) {
         return;
@@ -47,6 +46,7 @@ class _AddTaskState extends State<AddTask> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Card(
