@@ -87,7 +87,7 @@ class _TaskListState extends State<TaskList> {
                   height: 40,
                 ),
                 Container(
-                  height: constraints.maxHeight * 0.7,
+                  height: constraints.maxHeight * 0.5,
                   child: Image.asset(
                     'assets/images/waiting.png',
                     fit: BoxFit.cover,
