@@ -15,7 +15,7 @@ class _AddTaskState extends State<AddTask> {
   final _detailsController = TextEditingController();
   final _tagsController = TextEditingController();
   final _subtasksController = TextEditingController();
-  final _priority = 1; //Todo: implement priority picker
+  final _priority = 3; //Todo: implement priority picker
   DateTime _dateDue;
 
   void _submitData() {
@@ -34,6 +34,7 @@ class _AddTaskState extends State<AddTask> {
     _tagsController.dispose();
     _subtasksController.dispose();
     */
+    Navigator.pop(context);
   }
 
   void _presentDatePicker() {
