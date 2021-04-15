@@ -174,12 +174,14 @@ class _TaskListState extends State<TaskList> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      widget.tasks[ind].name,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        /*color: Theme.of(context).primaryColorDark*/
+                                    Expanded(
+                                      child: Text(
+                                        widget.tasks[ind].name,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          /*color: Theme.of(context).primaryColorDark*/
+                                        ),
                                       ),
                                     ),
                                     Padding(
