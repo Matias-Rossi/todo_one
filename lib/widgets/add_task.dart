@@ -76,6 +76,7 @@ class _AddTaskState extends State<AddTask> {
             top: 10,
             left: 10,
             right: 10,
+            bottom: 10,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -112,26 +113,31 @@ class _AddTaskState extends State<AddTask> {
                   ],
                 ),
               ),
-              DropdownButton<String>(
-                value: _priority,
-                icon: const Icon(Icons.warning_rounded),
-                iconSize: 20,
-                onChanged: (String newValue) {
-                  setState(() {
-                    _priority = newValue;
-                  });
-                },
-                items: <String>['Urgente', 'Prioritario', 'Sin urgencia']
-                    .map<DropdownMenuItem<String>>((String _priority) {
-                  return DropdownMenuItem<String>(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  DropdownButton<String>(
                     value: _priority,
-                    child: Text(_priority),
-                  );
-                }).toList(),
-              ),
-              ElevatedButton(
-                child: Text('Añadir tarea'),
-                onPressed: _submitData,
+                    icon: const Icon(Icons.warning_rounded),
+                    iconSize: 20,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        _priority = newValue;
+                      });
+                    },
+                    items: <String>['Urgente', 'Prioritario', 'Sin urgencia']
+                        .map<DropdownMenuItem<String>>((String _priority) {
+                      return DropdownMenuItem<String>(
+                        value: _priority,
+                        child: Text(_priority),
+                      );
+                    }).toList(),
+                  ),
+                  ElevatedButton(
+                    child: Text('Añadir tarea'),
+                    onPressed: _submitData,
+                  ),
+                ],
               ),
             ],
           ),
