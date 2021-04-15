@@ -15,18 +15,32 @@ class _AddTaskState extends State<AddTask> {
   final _detailsController = TextEditingController();
   final _tagsController = TextEditingController();
   final _subtasksController = TextEditingController();
-  final _priority = 3; //Todo: implement priority picker
+  String _priority = "Sin urgencia"; //Todo: implement priority picker
   DateTime _dateDue;
 
   void _submitData() {
     if (_nameController.text.isEmpty) return;
+    int _priorityInt;
+    switch (_priority) {
+      case "Sin urgencia":
+        _priorityInt = 3;
+        break;
+      case "Prioritario":
+        _priorityInt = 2;
+        break;
+      case "Urgente":
+        _priorityInt = 1;
+        break;
+      default:
+        _priorityInt = 3;
+    }
     widget.addTask(
       _nameController.text,
       _dateDue,
       _detailsController.text,
       _tagsController.text,
       _subtasksController.text,
-      _priority,
+      _priorityInt,
     );
     /*
     _nameController.dispose();
@@ -97,6 +111,23 @@ class _AddTaskState extends State<AddTask> {
                     ),
                   ],
                 ),
+              ),
+              DropdownButton<String>(
+                value: _priority,
+                icon: const Icon(Icons.warning_rounded),
+                iconSize: 20,
+                onChanged: (String newValue) {
+                  setState(() {
+                    _priority = newValue;
+                  });
+                },
+                items: <String>['Urgente', 'Prioritario', 'Sin urgencia']
+                    .map<DropdownMenuItem<String>>((String _priority) {
+                  return DropdownMenuItem<String>(
+                    value: _priority,
+                    child: Text(_priority),
+                  );
+                }).toList(),
               ),
               ElevatedButton(
                 child: Text('Añadir tarea'),
