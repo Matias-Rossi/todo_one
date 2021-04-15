@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/task.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class TaskList extends StatefulWidget {
   final List<Task> tasks;
@@ -93,6 +94,43 @@ class _TaskListState extends State<TaskList> {
     //todo estilizar con colores
   }
 
+  IconSlideAction _nextStatus(String status, int ind) {
+    switch (status) {
+      case "Pendiente":
+        return IconSlideAction(
+          caption: 'Hoy',
+          icon: Icons.calendar_today_sharp,
+          color: Colors.amber,
+          onTap: () {
+            setState(() {
+              widget.tasks[ind].status = "Hoy";
+            });
+          },
+        );
+      case "Hoy":
+        return IconSlideAction(
+          caption: 'Realizado',
+          icon: Icons.check,
+          color: Colors.green,
+          onTap: () {
+            setState(() {
+              widget.tasks[ind].status = "Realizado";
+            });
+          },
+        );
+      default:
+        return IconSlideAction(
+            caption: 'Delete',
+            color: Colors.red,
+            icon: Icons.delete,
+            onTap: () {
+              setState(() {
+                widget.tasks.removeAt(ind);
+              });
+            });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -116,7 +154,8 @@ class _TaskListState extends State<TaskList> {
           : ListView.builder(
               itemCount: widget.tasks.length,
               itemBuilder: (ctx, ind) {
-                return Dismissible(
+                return Slidable(
+                  actionPane: SlidableScrollActionPane(),
                   key: Key(widget.tasks[ind].id),
                   child: Card(
                     margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
@@ -179,27 +218,26 @@ class _TaskListState extends State<TaskList> {
                       ),
                     ),
                   ),
-                  background: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(Icons.delete_forever, size: 24.0),
-                          //Icon(Icons.delete_forever, size: 24.0),
-                          Text(""),
-                        ],
-                      ),
-                    ),
+                  actions: <Widget>[_nextStatus(widget.tasks[ind].status, ind)],
+                  secondaryActions: <Widget>[
+                    IconSlideAction(
+                        caption: 'Delete',
+                        color: Colors.red,
+                        icon: Icons.delete,
+                        onTap: () {
+                          setState(() {
+                            widget.tasks.removeAt(ind);
+                          });
+                        })
+                  ],
+                  dismissal: SlidableDismissal(
+                    child: SlidableDrawerDismissal(),
+                    onDismissed: (actionType) {
+                      setState(() {
+                        widget.tasks.removeAt(ind);
+                      });
+                    },
                   ),
-                  onDismissed: (direction) {
-                    setState(() {
-                      widget.tasks.removeAt(ind);
-                    });
-                    /*
-                    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-                        content: Text("${widget.tasks[ind].name} eliminado")));*/
-                  },
                 );
               }),
     );
