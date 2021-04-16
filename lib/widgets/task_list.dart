@@ -15,22 +15,6 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
-  List<Widget> _showSubtasks(List<Subtask> subtasks) {
-    if (subtasks == null || subtasks[0].name == "") return [TaskList._empty];
-    print(subtasks[0].name);
-    List<Widget> ret = [];
-    subtasks.forEach((subtask) {
-      final subtaskLine = CheckboxListTile(
-        value: subtask.isCompleted,
-        title: Text(subtask.name),
-        onChanged: null,
-      );
-      //todo: agregar capacidad de tildar subtasks
-      ret.add(subtaskLine);
-    });
-    return ret;
-  }
-
   IconSlideAction _nextStatus(String status, int ind) {
     switch (status) {
       case "Pendiente":
@@ -78,8 +62,8 @@ class _TaskListState extends State<TaskList> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Container(
-            height: 200,
-            width: 400, //Implementar MediaQuery
+            //height: 200,
+            width: 400, //todo Implementar MediaQuery
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -92,11 +76,13 @@ class _TaskListState extends State<TaskList> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        task.name,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                      Flexible(
+                        child: Text(
+                          task.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                       TaskStatus(status: task.status),
@@ -105,12 +91,13 @@ class _TaskListState extends State<TaskList> {
                   TaskPriority(priority: task.priority),
                   TaskDueDate(dateDue: task.dateDue),
                   TaskDetails(details: task.details),
-                  ..._showSubtasks(task.subtasks),
+                  TaskSubtasks(task.subtasks),
                   Align(
                     alignment: Alignment.bottomRight,
                     child: TextButton(
                       onPressed: () {
                         Navigator.pop(context);
+                        setState(() {});
                       },
                       child: Text("Cerrar"),
                     ),
@@ -182,18 +169,15 @@ class _TaskListState extends State<TaskList> {
                                     //todo armar mejor la presentación de los estados
                                   ],
                                 ),
-
                                 TaskDueDate(dateDue: widget.tasks[ind].dateDue),
-
                                 Padding(
                                   padding: const EdgeInsets.only(top: 2.0),
                                   child: TaskPriority(
                                       priority: widget.tasks[ind].priority),
                                 ),
-
+                                TaskSubtasksCounter(
+                                    subtasks: widget.tasks[ind].subtasks),
                                 TaskDetails(details: widget.tasks[ind].details),
-
-                                //todo implementar contador de subtasks
                               ],
                             ),
                           ),

@@ -44,6 +44,10 @@ class _MyHomePageState extends State<MyHomePage> {
       priority: 3,
       status: "Pendiente",
       dateDue: DateTime.utc(2021, 4, 18),
+      subtasks: [
+        Subtask("Ver clasificacion", false),
+        Subtask("Ver carrera", false)
+      ],
     ),
     Task(
       id: DateTime.now().add(Duration(hours: 1)).toString(),
