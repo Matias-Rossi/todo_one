@@ -33,14 +33,20 @@ class _TaskListState extends State<TaskList> {
 
   Widget _showDate(DateTime dateDue) {
     return dateDue != null
-        ? Text("\u{1F4C5} ${DateFormat.yMd().format(dateDue)}")
+        ? Padding(
+            padding: const EdgeInsets.only(top: 2.0),
+            child: Text("\u{1F4C5} ${DateFormat.yMd().format(dateDue)}"),
+          )
         : TaskList._empty;
   }
 
   Widget _showDetails(String details) {
     if (details != null) {
       return details.isNotEmpty
-          ? Text(details, style: TextStyle(color: Colors.black45))
+          ? Padding(
+              padding: const EdgeInsets.only(top: 2.0),
+              child: Text(details, style: TextStyle(color: Colors.black45)),
+            )
           : TaskList._empty;
     } else
       return TaskList._empty;
@@ -60,7 +66,12 @@ class _TaskListState extends State<TaskList> {
         backColor = Color.fromRGBO(72, 181, 0, 127);
         break;
       default:
-        return Text(status);
+        return Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Text(
+            status,
+          ),
+        );
     }
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -77,19 +88,24 @@ class _TaskListState extends State<TaskList> {
   }
 
   Widget _showPriority(int priority) {
+    String priorityStr = "";
     switch (priority) {
       case 1:
-        return Text("Urgente");
+        priorityStr = "Urgente";
         break;
       case 2:
-        return Text("Prioritario");
+        priorityStr = "Prioritario";
         break;
       case 3:
-        return Text("Sin urgencia");
+        priorityStr = "Sin urgencia";
         break;
       default:
         return TaskList._empty;
     }
+    return Padding(
+      padding: const EdgeInsets.only(top: 2.0),
+      child: Text(priorityStr),
+    );
 
     //todo estilizar con colores
   }
@@ -129,6 +145,62 @@ class _TaskListState extends State<TaskList> {
               });
             });
     }
+  }
+
+  void _openTask(Task task) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          insetAnimationDuration: const Duration(milliseconds: 100),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Container(
+            height: 200,
+            width: 400, //Implementar MediaQuery
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 10,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        task.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      _showStatus(task.status),
+                    ],
+                  ),
+                  _showPriority(task.priority),
+                  _showDate(task.dateDue),
+                  _showDetails(task.details),
+                  ..._showSubtasks(task.subtasks),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Cerrar"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -184,30 +256,21 @@ class _TaskListState extends State<TaskList> {
                                         ),
                                       ),
                                     ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 16.0),
-                                      child:
-                                          _showStatus(widget.tasks[ind].status),
-                                    ),
+                                    _showStatus(widget.tasks[ind].status),
                                     //todo armar mejor la presentación de los estados
                                   ],
                                 ),
 
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 2.0),
-                                  child: _showDate(widget.tasks[ind].dateDue),
-                                ),
+                                _showDate(widget.tasks[ind].dateDue),
+
                                 Padding(
                                   padding: const EdgeInsets.only(top: 2.0),
                                   child:
                                       _showPriority(widget.tasks[ind].priority),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 2.0),
-                                  child:
-                                      _showDetails(widget.tasks[ind].details),
-                                ),
+
+                                _showDetails(widget.tasks[ind].details),
+
                                 ..._showSubtasks(widget.tasks[ind]
                                     .subtasks) //TODO encontrar una forma de hacer bien el _empty
                               ],
@@ -215,7 +278,9 @@ class _TaskListState extends State<TaskList> {
                           ),
                           IconButton(
                               icon: const Icon(Icons.list_sharp),
-                              onPressed: () => {})
+                              onPressed: () {
+                                _openTask(widget.tasks[ind]);
+                              })
                         ],
                       ),
                     ),
