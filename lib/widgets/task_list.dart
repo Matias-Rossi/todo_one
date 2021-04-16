@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../models/task.dart';
+import './task_elements.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class TaskList extends StatefulWidget {
@@ -29,85 +29,6 @@ class _TaskListState extends State<TaskList> {
       ret.add(subtaskLine);
     });
     return ret;
-  }
-
-  Widget _showDate(DateTime dateDue) {
-    return dateDue != null
-        ? Padding(
-            padding: const EdgeInsets.only(top: 2.0),
-            child: Text("\u{1F4C5} ${DateFormat.yMd().format(dateDue)}"),
-          )
-        : TaskList._empty;
-  }
-
-  Widget _showDetails(String details) {
-    if (details != null) {
-      return details.isNotEmpty
-          ? Padding(
-              padding: const EdgeInsets.only(top: 2.0),
-              child: Text(details, style: TextStyle(color: Colors.black45)),
-            )
-          : TaskList._empty;
-    } else
-      return TaskList._empty;
-  }
-
-  Widget _showStatus(String status) {
-    if (status == null) return TaskList._empty;
-    Color backColor;
-    switch (status) {
-      case "Pendiente":
-        backColor = Color.fromRGBO(230, 179, 62, 127);
-        break;
-      case "Hoy":
-        backColor = Color.fromRGBO(163, 11, 0, 127);
-        break;
-      case "Realizado":
-        backColor = Color.fromRGBO(72, 181, 0, 127);
-        break;
-      default:
-        return Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: Text(
-            status,
-          ),
-        );
-    }
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: backColor,
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
-        child: Text(status),
-      ),
-    );
-  }
-
-  Widget _showPriority(int priority) {
-    String priorityStr = "";
-    switch (priority) {
-      case 1:
-        priorityStr = "Urgente";
-        break;
-      case 2:
-        priorityStr = "Prioritario";
-        break;
-      case 3:
-        priorityStr = "Sin urgencia";
-        break;
-      default:
-        return TaskList._empty;
-    }
-    return Padding(
-      padding: const EdgeInsets.only(top: 2.0),
-      child: Text(priorityStr),
-    );
-
-    //todo estilizar con colores
   }
 
   IconSlideAction _nextStatus(String status, int ind) {
@@ -178,12 +99,12 @@ class _TaskListState extends State<TaskList> {
                           fontSize: 20,
                         ),
                       ),
-                      _showStatus(task.status),
+                      TaskStatus(status: task.status),
                     ],
                   ),
-                  _showPriority(task.priority),
-                  _showDate(task.dateDue),
-                  _showDetails(task.details),
+                  TaskPriority(priority: task.priority),
+                  TaskDueDate(dateDue: task.dateDue),
+                  TaskDetails(details: task.details),
                   ..._showSubtasks(task.subtasks),
                   Align(
                     alignment: Alignment.bottomRight,
@@ -256,20 +177,21 @@ class _TaskListState extends State<TaskList> {
                                         ),
                                       ),
                                     ),
-                                    _showStatus(widget.tasks[ind].status),
+                                    TaskStatus(
+                                        status: widget.tasks[ind].status),
                                     //todo armar mejor la presentación de los estados
                                   ],
                                 ),
 
-                                _showDate(widget.tasks[ind].dateDue),
+                                TaskDueDate(dateDue: widget.tasks[ind].dateDue),
 
                                 Padding(
                                   padding: const EdgeInsets.only(top: 2.0),
-                                  child:
-                                      _showPriority(widget.tasks[ind].priority),
+                                  child: TaskPriority(
+                                      priority: widget.tasks[ind].priority),
                                 ),
 
-                                _showDetails(widget.tasks[ind].details),
+                                TaskDetails(details: widget.tasks[ind].details),
 
                                 //todo implementar contador de subtasks
                               ],
