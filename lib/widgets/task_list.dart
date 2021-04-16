@@ -271,8 +271,7 @@ class _TaskListState extends State<TaskList> {
 
                                 _showDetails(widget.tasks[ind].details),
 
-                                ..._showSubtasks(widget.tasks[ind]
-                                    .subtasks) //TODO encontrar una forma de hacer bien el _empty
+                                //todo implementar contador de subtasks
                               ],
                             ),
                           ),
