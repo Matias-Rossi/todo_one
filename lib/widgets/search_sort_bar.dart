@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import './sort_menu.dart';
 
 class SearchBar extends StatefulWidget {
   @override
@@ -10,7 +11,7 @@ class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
+      width: 275,
       //child: Text("[Searchbar placeholder]"),
       child: CupertinoSearchTextField(
         onChanged: (value) {},
@@ -20,20 +21,11 @@ class _SearchBarState extends State<SearchBar> {
   }
 }
 
-class SortButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: TextButton(
-      child: Text("Ordenar"),
-      onPressed: () {},
-    ));
-  }
-}
-
 class SearchSortBar extends StatelessWidget {
+  SearchSortBar(this._sort);
+
+  final Function _sort;
   final _searchBar = SearchBar();
-  final _sortButton = SortButton();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +33,7 @@ class SearchSortBar extends StatelessWidget {
       child: Row(
         children: [
           _searchBar,
-          _sortButton,
+          SortMenu(_sort),
         ],
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       ),

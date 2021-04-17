@@ -4,6 +4,7 @@ import './widgets/add_task.dart';
 import './widgets/task_list.dart';
 import './models/task.dart';
 import './widgets/search_sort_bar.dart';
+import 'package:todo_one/globals.dart' as globals;
 
 void main() {
   runApp(MyApp());
@@ -143,6 +144,32 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  void _sort(tasks, String sortByStr) {
+    Function sortByFunction;
+    //Mayor = se muestra antes
+    switch (sortByStr) {
+      case "Prioridad":
+        sortByFunction = (Task a, Task b) => a.priority < b.priority ? 1 : -1;
+        break;
+      case "Límite":
+        sortByFunction = (Task a, Task b) {
+          if (a.dateDue == null) return -1;
+          if (b.dateDue == null)
+            return 1;
+          else
+            return a.dateDue.compareTo(b.dateDue);
+        };
+        break;
+      case "Creación":
+        sortByFunction =
+            (Task a, Task b) => b.dateCreated.compareTo(a.dateCreated);
+        break;
+      default:
+        sortByFunction = (Task a, Task b) => a.status.compareTo(b.status);
+    }
+    tasks.sort(sortByFunction);
+  }
+
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(title: Text("To-Do List"), actions: <Widget>[
@@ -152,7 +179,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     ]);
 
-    final _searchSortBar = SearchSortBar();
+    final _searchSortBar = SearchSortBar(_sort);
+    _sort(_userTasks, globals.sortBy);
     final taskListWidget = Expanded(child: TaskList(_userTasks));
 
     return Scaffold(
