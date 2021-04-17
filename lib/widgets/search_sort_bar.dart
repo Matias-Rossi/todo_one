@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
-class SearchBar extends StatelessWidget {
+class SearchBar extends StatefulWidget {
+  @override
+  _SearchBarState createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text("[Searchbar placeholder]"),
+      width: 300,
+      //child: Text("[Searchbar placeholder]"),
+      child: CupertinoSearchTextField(
+        onChanged: (value) {},
+        onSubmitted: (value) {},
+      ),
     );
   }
 }
@@ -32,7 +43,7 @@ class SearchSortBar extends StatelessWidget {
           _searchBar,
           _sortButton,
         ],
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       ),
     );
   }
